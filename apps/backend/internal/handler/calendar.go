@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"mgm.lab/calendar-backend/internal/httpx"
-	"mgm.lab/calendar-backend/internal/model"
+	"github.com/shirasakaren/carendar/apps/backend/internal/httpx"
+	"github.com/shirasakaren/carendar/apps/backend/internal/model"
 )
 
 var jakartaLoc = func() *time.Location {

@@ -15,11 +15,11 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 
-	"mgm.lab/calendar-backend/internal/config"
-	"mgm.lab/calendar-backend/internal/db"
-	"mgm.lab/calendar-backend/internal/handler"
-	"mgm.lab/calendar-backend/internal/repository"
-	"mgm.lab/calendar-backend/internal/service"
+	"github.com/shirasakaren/carendar/apps/backend/internal/config"
+	"github.com/shirasakaren/carendar/apps/backend/internal/db"
+	"github.com/shirasakaren/carendar/apps/backend/internal/handler"
+	"github.com/shirasakaren/carendar/apps/backend/internal/repository"
+	"github.com/shirasakaren/carendar/apps/backend/internal/service"
 )
 
 func main() {

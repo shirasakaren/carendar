@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"mgm.lab/calendar-backend/internal/model"
+	"github.com/shirasakaren/carendar/apps/backend/internal/model"
 )
 
 func mustTime(t *testing.T, s string) time.Time {

@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"time"
 
-	"mgm.lab/calendar-backend/internal/httpx"
-	"mgm.lab/calendar-backend/internal/middleware"
+	"github.com/shirasakaren/carendar/apps/backend/internal/httpx"
+	"github.com/shirasakaren/carendar/apps/backend/internal/middleware"
 )
 
 type loginRequest struct {

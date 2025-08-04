@@ -12,10 +12,10 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 
-	"mgm.lab/calendar-backend/internal/httpx"
-	"mgm.lab/calendar-backend/internal/model"
-	"mgm.lab/calendar-backend/internal/repository"
-	"mgm.lab/calendar-backend/internal/service"
+	"github.com/shirasakaren/carendar/apps/backend/internal/httpx"
+	"github.com/shirasakaren/carendar/apps/backend/internal/model"
+	"github.com/shirasakaren/carendar/apps/backend/internal/repository"
+	"github.com/shirasakaren/carendar/apps/backend/internal/service"
 )
 
 // ─── Public endpoints ─────────────────────────────────────────────────

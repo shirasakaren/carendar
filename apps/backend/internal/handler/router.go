@@ -6,9 +6,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	chimw "github.com/go-chi/chi/v5/middleware"
 
-	"mgm.lab/calendar-backend/internal/httpx"
-	"mgm.lab/calendar-backend/internal/middleware"
-	"mgm.lab/calendar-backend/internal/service"
+	"github.com/shirasakaren/carendar/apps/backend/internal/httpx"
+	"github.com/shirasakaren/carendar/apps/backend/internal/middleware"
+	"github.com/shirasakaren/carendar/apps/backend/internal/service"
 )
 
 type Deps struct {

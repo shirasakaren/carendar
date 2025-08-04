@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"mgm.lab/calendar-backend/internal/httpx"
+	"github.com/shirasakaren/carendar/apps/backend/internal/httpx"
 )
 
 const maxUploadBytes = 100 << 20 // 100 MiB
