@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strings"
 
-	"mgm.lab/calendar-backend/internal/httpx"
-	"mgm.lab/calendar-backend/internal/service"
+	"github.com/shirasakaren/carendar/apps/backend/internal/httpx"
+	"github.com/shirasakaren/carendar/apps/backend/internal/service"
 )
 
 const CookieName = "mgm_admin_token"

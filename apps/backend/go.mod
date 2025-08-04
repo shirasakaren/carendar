@@ -1,4 +1,4 @@
-module mgm.lab/calendar-backend
+module github.com/shirasakaren/carendar/apps/backend
 
 go 1.25.0
 
