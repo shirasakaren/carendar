@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"mgm.lab/calendar-backend/internal/model"
+	"github.com/shirasakaren/carendar/apps/backend/internal/model"
 )
 
 var ErrNotFound = errors.New("event not found")

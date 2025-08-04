@@ -9,8 +9,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"mgm.lab/calendar-backend/internal/model"
-	"mgm.lab/calendar-backend/internal/repository"
+	"github.com/shirasakaren/carendar/apps/backend/internal/model"
+	"github.com/shirasakaren/carendar/apps/backend/internal/repository"
 )
 
 var ErrValidation = errors.New("validation")

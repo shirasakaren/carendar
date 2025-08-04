@@ -16,7 +16,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/google/uuid"
 
-	appconfig "mgm.lab/calendar-backend/internal/config"
+	appconfig "github.com/shirasakaren/carendar/apps/backend/internal/config"
 )
 
 type S3 struct {
