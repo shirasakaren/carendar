@@ -1,0 +1,40 @@
+# ── Node / npm ─────────────────────────────────────────────────────────
+node_modules/
+/.pnp
+.pnp.js
+
+# ── Next.js ────────────────────────────────────────────────────────────
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+
+# ── Go ─────────────────────────────────────────────────────────────────
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+coverage.*
+*.coverprofile
+profile.cov
+go.work
+go.work.sum
+
+# ── Env & secrets ──────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# ── Logs & misc ────────────────────────────────────────────────────────
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+*.pem
+.idea/
+.vscode/
