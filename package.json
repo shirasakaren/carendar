@@ -1,0 +1,13 @@
+{
+  "name": "carendar",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace apps/frontend",
+    "build": "npm run build --workspace apps/frontend",
+    "start": "npm run start --workspace apps/frontend"
+  }
+}
