@@ -1,0 +1,82 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        bg: "#ffffff",
+        surface: "#ffffff",
+        "surface-muted": "#f7f7f5",
+        "surface-inverse": "#0e1116",
+        ink: "#0e1116",
+        "ink-2": "#3b4150",
+        "ink-3": "#6b7280",
+        "ink-4": "#9aa1ad",
+        line: "#ececea",
+        "line-strong": "#d8d8d2",
+        brand: {
+          blue: "#3a6dc5",
+          yellow: "#f7bf33",
+          red: "#f94141",
+          green: "#0f8657",
+          "blue-50": "#ecf1fa",
+          "yellow-50": "#fef6e0",
+          "red-50": "#fee5e5",
+          "green-50": "#e2f1ea",
+        },
+      },
+      fontFamily: {
+        display: ["var(--font-display)", "ui-sans-serif", "system-ui", "sans-serif"],
+        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+      },
+      fontSize: {
+        "display-2xl": ["4.5rem", { lineHeight: "1.02", letterSpacing: "-0.03em", fontWeight: "600" }],
+        "display-xl":  ["3.5rem", { lineHeight: "1.05", letterSpacing: "-0.025em", fontWeight: "600" }],
+        "display-lg":  ["2.5rem", { lineHeight: "1.10", letterSpacing: "-0.02em", fontWeight: "600" }],
+        h1:            ["2rem", { lineHeight: "1.15", letterSpacing: "-0.015em", fontWeight: "600" }],
+        h2:            ["1.5rem", { lineHeight: "1.25", letterSpacing: "-0.01em", fontWeight: "600" }],
+        h3:            ["1.25rem", { lineHeight: "1.30", letterSpacing: "-0.005em", fontWeight: "600" }],
+        h4:            ["1.0625rem", { lineHeight: "1.40", fontWeight: "600" }],
+        "body-lg":     ["1.125rem", { lineHeight: "1.60" }],
+        body:          ["1rem", { lineHeight: "1.60" }],
+        "body-sm":     ["0.9375rem", { lineHeight: "1.55" }],
+        caption:       ["0.8125rem", { lineHeight: "1.50", letterSpacing: "0.005em", fontWeight: "500" }],
+        eyebrow:       ["0.75rem", { lineHeight: "1.40", letterSpacing: "0.12em", fontWeight: "600" }],
+      },
+      borderRadius: {
+        sm: "8px",
+        DEFAULT: "12px",
+        lg: "20px",
+        xl: "28px",
+      },
+      boxShadow: {
+        "1": "0 1px 2px rgba(14,17,22,0.04), 0 1px 1px rgba(14,17,22,0.03)",
+        "2": "0 6px 24px -8px rgba(14,17,22,0.10), 0 2px 6px -2px rgba(14,17,22,0.05)",
+        "3": "0 24px 60px -20px rgba(14,17,22,0.18), 0 4px 12px -4px rgba(14,17,22,0.06)",
+      },
+      transitionTimingFunction: {
+        "out-soft": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "in-out-soft": "cubic-bezier(0.65, 0, 0.35, 1)",
+        spring: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+      },
+      transitionDuration: {
+        "120": "120ms",
+        "200": "200ms",
+        "320": "320ms",
+        "520": "520ms",
+        "800": "800ms",
+      },
+      maxWidth: {
+        prose: "640px",
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;

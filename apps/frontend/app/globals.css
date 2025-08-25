@@ -1,0 +1,239 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Surfaces */
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-muted: #f7f7f5;
+    --surface-inverse: #0e1116;
+
+    /* Brand */
+    --brand-blue: #3a6dc5;
+    --brand-yellow: #f7bf33;
+    --brand-red: #f94141;
+    --brand-green: #0f8657;
+    --brand-blue-50: #ecf1fa;
+    --brand-yellow-50: #fef6e0;
+    --brand-red-50: #fee5e5;
+    --brand-green-50: #e2f1ea;
+
+    /* Text */
+    --ink: #0e1116;
+    --ink-2: #3b4150;
+    --ink-3: #6b7280;
+    --ink-4: #9aa1ad;
+
+    /* Lines */
+    --line: #ececea;
+    --line-strong: #d8d8d2;
+
+    /* Focus */
+    --focus: #3a6dc5;
+
+    /* Shadows */
+    --shadow-1: 0 1px 2px rgba(14, 17, 22, 0.04), 0 1px 1px rgba(14, 17, 22, 0.03);
+    --shadow-2: 0 6px 24px -8px rgba(14, 17, 22, 0.10), 0 2px 6px -2px rgba(14, 17, 22, 0.05);
+    --shadow-3: 0 24px 60px -20px rgba(14, 17, 22, 0.18), 0 4px 12px -4px rgba(14, 17, 22, 0.06);
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    color: var(--ink);
+    background: var(--bg);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Tabular numerals for tightly-aligned numeric grids (the calendar). */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+}
+
+/* ── Motion ─────────────────────────────────────────────────────────── */
+
+@keyframes mgm-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.mgm-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-muted) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    var(--surface-muted) 100%
+  );
+  background-size: 200% 100%;
+  animation: mgm-shimmer 1.4s linear infinite;
+}
+
+@keyframes mgm-slide-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.mgm-slide-in {
+  animation: mgm-slide-in 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes mgm-modal-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.mgm-modal-in {
+  animation: mgm-modal-in 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes mgm-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.mgm-backdrop-in {
+  animation: mgm-backdrop-in 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes mgm-drawer-in {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+.mgm-drawer-in {
+  animation: mgm-drawer-in 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Native <select> dressed up to match Button/Input. */
+.mgm-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b4150' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 0.7em;
+  padding-right: 2.25rem;
+}
+
+/* ── Rendered TipTap body (read-only) ───────────────────────────────── */
+.mgm-rich {
+  color: var(--ink-2);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.mgm-rich p { margin: 0 0 0.85em 0; }
+.mgm-rich p:last-child { margin-bottom: 0; }
+.mgm-rich h1, .mgm-rich h2, .mgm-rich h3 {
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 1.4em 0 0.5em;
+}
+.mgm-rich h1 { font-size: 1.5rem; }
+.mgm-rich h2 { font-size: 1.25rem; }
+.mgm-rich h3 { font-size: 1.0625rem; }
+.mgm-rich a {
+  color: var(--brand-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.mgm-rich a:hover { text-decoration-thickness: 2px; }
+.mgm-rich ul, .mgm-rich ol {
+  margin: 0 0 1em 1.25em;
+  padding-left: 0.5em;
+}
+.mgm-rich ul { list-style: disc; }
+.mgm-rich ol { list-style: decimal; }
+.mgm-rich li { margin: 0.25em 0; }
+.mgm-rich blockquote {
+  border-left: 3px solid var(--line-strong);
+  padding: 0.25em 0 0.25em 1em;
+  color: var(--ink-3);
+  margin: 1em 0;
+}
+.mgm-rich code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875rem;
+  background: var(--surface-muted);
+  padding: 0.1em 0.35em;
+  border-radius: 6px;
+}
+.mgm-rich pre {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  background: var(--surface-muted);
+  padding: 1em;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin: 1em 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.mgm-rich pre code {
+  background: transparent;
+  padding: 0;
+}
+.mgm-rich hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 1.5em 0;
+}
+.mgm-rich img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin: 1em 0;
+}
+.mgm-rich audio {
+  width: 100%;
+  margin: 1em 0;
+}
+.mgm-embed {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 1em 0;
+  background: var(--surface-muted);
+}
+.mgm-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* TipTap placeholder. Shows on the first empty paragraph. */
+.mgm-rich .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--ink-4);
+  pointer-events: none;
+  height: 0;
+}
+
+/* TipTap selection styling inside the editor. */
+.mgm-rich .ProseMirror-focused,
+.mgm-rich.ProseMirror {
+  outline: none;
+}
+.mgm-rich iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  border: 0;
+}
