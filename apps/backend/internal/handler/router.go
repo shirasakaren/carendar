@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	chimw "github.com/go-chi/chi/v5/middleware"
@@ -33,6 +34,8 @@ func NewRouter(deps Deps) http.Handler {
 
 	r := chi.NewRouter()
 	r.Use(chimw.Recoverer)
+	r.Use(middleware.RequestID)
+	r.Use(middleware.SecurityHeaders)
 	r.Use(middleware.CORS(deps.AllowedOrigin))
 	r.Use(middleware.Logger)
 
