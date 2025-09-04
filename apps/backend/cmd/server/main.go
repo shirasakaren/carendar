@@ -23,6 +23,13 @@ import (
 )
 
 func main() {
+	// `-healthcheck` mode is used by the docker-compose healthcheck: it
+	// pings the running server instead of the distroless image needing a
+	// shell or wget.
+	if len(os.Args) > 1 && os.Args[1] == "-healthcheck" {
+		os.Exit(healthcheck())
+	}
+
 	cfg, err := config.Load()
 	if err != nil {
 		log.Fatalf("config: %v", err)
@@ -100,4 +107,30 @@ func runMigrations(dbURL, path string) error {
 		return err
 	}
 	return nil
+}
+// healthcheck performs a GET against the running server's liveness probe
+// and exits 0 on success. PORT defaults to 8080 like the server itself.
+func healthcheck() int {
+	cfg, err := config.Load()
+	if err != nil {
+		// Env may be incomplete in this mode; fall back to the port only.
+		cfg = &config.Config{Port: "8080"}
+	}
+	port := cfg.Port
+	if v := os.Getenv("PORT"); v != "" {
+		port = v
+	}
+
+	client := &http.Client{Timeout: 5 * time.Second}
+	resp, err := client.Get("http://127.0.0.1:" + port + "/api/healthz")
+	if err != nil {
+		log.Printf("healthcheck: %v", err)
+		return 1
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		log.Printf("healthcheck: unexpected status %d", resp.StatusCode)
+		return 1
+	}
+	return 0
 }
