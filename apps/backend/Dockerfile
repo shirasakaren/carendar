@@ -1,5 +1,8 @@
 # syntax=docker/dockerfile:1.6
 
+# Built from the repository root so paths are relative to the monorepo:
+#   docker build -f apps/backend/Dockerfile .
+
 # ── Build stage ────────────────────────────────────────────────────────
 FROM golang:1.25-alpine AS build
 WORKDIR /src
@@ -7,11 +10,10 @@ WORKDIR /src
 RUN apk add --no-cache git ca-certificates
 
 # Resolve and cache modules before copying the rest of the source.
-COPY go.mod ./
-COPY go.sum* ./
-RUN go mod download || true
+COPY apps/backend/go.mod apps/backend/go.sum ./
+RUN go mod download
 
-COPY . .
+COPY apps/backend/ .
 # tidy so missing/extra deps are reconciled before build.
 RUN go mod tidy
 RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/server ./cmd/server
