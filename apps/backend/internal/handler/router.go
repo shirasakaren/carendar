@@ -46,8 +46,9 @@ func NewRouter(deps Deps) http.Handler {
 	r.Get("/api/events/{id}", h.GetPublic)
 	r.Get("/api/calendar.ics", h.CalendarICS)
 
-	// Admin auth (no JWT required to obtain one)
-	r.Post("/api/admin/auth", h.Login)
+	// Admin auth (no JWT required to obtain one). Rate-limited to slow
+	// down brute-force attempts.
+	r.With(middleware.RateLimit(10, time.Minute)).Post("/api/admin/auth", h.Login)
 
 	// Admin (JWT required)
 	r.Group(func(r chi.Router) {
