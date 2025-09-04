@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 	"time"
 )
@@ -16,11 +16,19 @@ func (r *statusRecorder) WriteHeader(s int) {
 	r.ResponseWriter.WriteHeader(s)
 }
 
+// Logger emits one structured log line per request, keyed by the
+// correlation ID stamped by RequestID.
 func Logger(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 		rec := &statusRecorder{ResponseWriter: w, status: 200}
 		next.ServeHTTP(rec, r)
-		log.Printf("%s %s -> %d (%s)", r.Method, r.URL.Path, rec.status, time.Since(start))
+		slog.Info("request",
+			"request_id", RequestIDFrom(r.Context()),
+			"method", r.Method,
+			"path", r.URL.Path,
+			"status", rec.status,
+			"duration_ms", time.Since(start).Milliseconds(),
+		)
 	})
 }
