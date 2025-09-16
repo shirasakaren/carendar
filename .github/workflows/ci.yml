@@ -57,3 +57,48 @@ jobs:
           cache-from: type=gha,scope=backend-ci
           cache-to: type=gha,mode=max,scope=backend-ci
 
+  frontend:
+    name: frontend · typecheck · build
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:8080' }}
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Typecheck
+        run: npm run typecheck --workspace @carendar/frontend
+
+      - name: Build
+        run: npm run build --workspace @carendar/frontend
+
+  frontend-docker:
+    name: frontend · docker build smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build image (no push)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/frontend/Dockerfile
+          push: false
+          load: true
+          tags: carendar-frontend:ci
+          build-args: |
+            NEXT_PUBLIC_API_URL=http://localhost:8080
+          cache-from: type=gha,scope=frontend-ci
+          cache-to: type=gha,mode=max,scope=frontend-ci
