@@ -85,3 +85,14 @@ vet/build/test (+race), frontend typecheck/build, and Docker build
 smokes for each image. `staging` and `production` workflows publish
 both images to Docker Hub and skip gracefully when credentials are not
 configured.
+
+## Conventions
+
+- All API timestamps are RFC 3339 with a Jakarta offset; the frontend
+  interprets editor inputs as WIB regardless of the admin's device
+  timezone.
+- Categories are a closed set shared by both apps (enum on the backend,
+  a union type + metadata table on the frontend).
+- The design system (MGM Laboratory) lives in the frontend only — the
+  API never returns markup, only structured JSON (TipTap documents are
+  opaque `description_json` blobs).
