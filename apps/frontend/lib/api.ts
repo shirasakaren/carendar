@@ -8,7 +8,7 @@ export async function fetchEventsByMonth(
 ): Promise<Event[]> {
   const res = await fetch(`${API_URL}/api/events?month=${encodeURIComponent(month)}`, {
     cache: "no-store",
-    signal: opts?.signal,
+    signal: opts?.signal ?? AbortSignal.timeout(10_000),
   });
   if (!res.ok) {
     throw new Error(`Failed to load events (${res.status})`);
@@ -20,6 +20,7 @@ export async function fetchEventsByMonth(
 export async function fetchEvent(id: string): Promise<Event> {
   const res = await fetch(`${API_URL}/api/events/${encodeURIComponent(id)}`, {
     cache: "no-store",
+    signal: AbortSignal.timeout(10_000),
   });
   if (!res.ok) throw new Error(`Failed to load event (${res.status})`);
   return (await res.json()) as Event;
