@@ -13,8 +13,20 @@ export function WIBClock() {
   useEffect(() => {
     const tick = () => setNow(wibNowParts());
     tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
+
+    // Align the interval to the next whole second so the display flips in
+    // lockstep with the wall clock instead of drifting with timer jitter.
+    let interval: ReturnType<typeof setInterval> | null = null;
+    const delay = 1000 - (Date.now() % 1000);
+    const timeout = setTimeout(() => {
+      tick();
+      interval = setInterval(tick, 1000);
+    }, delay);
+
+    return () => {
+      clearTimeout(timeout);
+      if (interval !== null) clearInterval(interval);
+    };
   }, []);
 
   const pad = (n: number) => n.toString().padStart(2, "0");
