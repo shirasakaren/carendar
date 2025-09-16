@@ -1,0 +1,32 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      next:
+        patterns:
+          - "next"
+          - "eslint-config-next"
+      tiptap:
+        patterns:
+          - "@tiptap/*"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "gomod"
+    directory: "/apps/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      aws-sdk:
+        patterns:
+          - "github.com/aws/*"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
