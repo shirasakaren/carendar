@@ -55,6 +55,22 @@ func TestExpandRecurrenceRejectsGarbage(t *testing.T) {
 	}
 }
 
+func TestExpandRecurrenceMonthly(t *testing.T) {
+	loc := jakarta(t)
+	start := time.Date(2026, 9, 15, 9, 0, 0, 0, loc)
+	times, err := ExpandRecurrence("FREQ=MONTHLY;COUNT=3", start, nil)
+	if err != nil {
+		t.Fatalf("expand: %v", err)
+	}
+	if len(times) != 2 {
+		t.Fatalf("got %d occurrences, want 2", len(times))
+	}
+	want := start.AddDate(0, 1, 0)
+	if !times[0].Equal(want) {
+		t.Fatalf("first occurrence = %v, want %v (one month later)", times[0], want)
+	}
+}
+
 func TestExpandRecurrenceWeeklyByDay(t *testing.T) {
 	loc := jakarta(t)
 	// 1 Sep 2026 is a Tuesday.
