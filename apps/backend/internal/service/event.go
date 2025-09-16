@@ -15,6 +15,12 @@ import (
 
 var ErrValidation = errors.New("validation")
 
+// maxRecurrenceChildren caps how many instances a single parent may
+// materialise. A pathological rule (e.g. a daily event 2 years out is
+// ~730 rows) is fine; anything beyond 1000 is almost certainly a mistake
+// and would bloat the calendar tables.
+const maxRecurrenceChildren = 1000
+
 type EventService struct {
 	repo *repository.EventRepository
 }
@@ -83,6 +89,10 @@ func (s *EventService) expandAndInsert(ctx context.Context, parent *model.Event)
 	times, err := ExpandRecurrence(rule, parent.StartDatetime, parent.RecurrenceEndDate)
 	if err != nil {
 		return fmt.Errorf("expand recurrence: %w", err)
+	}
+	if len(times) > maxRecurrenceChildren {
+		return fmt.Errorf("%w: recurrence expands to %d instances (max %d)",
+			ErrValidation, len(times), maxRecurrenceChildren)
 	}
 	duration := parent.EndDatetime.Sub(parent.StartDatetime)
 	parentID := parent.ID
