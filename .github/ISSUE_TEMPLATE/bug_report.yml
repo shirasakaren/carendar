@@ -1,0 +1,54 @@
+name: Bug report
+description: Something is broken in the calendar or the admin panel.
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report. Please fill in as much detail as you can.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the unexpected behaviour.
+      placeholder: "Clicking X on the admin calendar does Y instead of Z."
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: The exact steps to trigger the bug.
+      placeholder: "1. Go to /admin\n2. Open the editor\n3. ..."
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which app is affected?
+      options:
+        - Frontend (calendar / admin UI)
+        - Backend (API)
+        - Both
+        - Other (CI, docker, docs)
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Git tag or commit hash, if known.
+      placeholder: v0.4.0
+  - type: textarea
+    id: context
+    attributes:
+      label: Environment
+      description: Browser, OS, and anything else relevant.
+      placeholder: "Chrome 128 on macOS, backend on Docker"
