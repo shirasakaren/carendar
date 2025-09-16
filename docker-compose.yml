@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mgm}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mgm_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-mgm_calendar}
+    volumes:
+      - carendar_db:/var/lib/postgresql/data
+    ports:
+      # Override the host-side port if 5432 is taken on the host, e.g.
+      # POSTGRES_PORT=5433. The container always listens on 5432.
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mgm} -d ${POSTGRES_DB:-mgm_calendar}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 8080
+      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-http://localhost:3000}
+      MIGRATIONS_PATH: /app/migrations
+      DATABASE_URL: ${DATABASE_URL:-postgres://mgm:mgm_dev_password@db:5432/mgm_calendar?sslmode=disable}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-changeme}
+      JWT_SECRET: ${JWT_SECRET:-replace-with-at-least-32-random-bytes}
+      JWT_TTL_HOURS: ${JWT_TTL_HOURS:-8}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_REGION: ${AWS_REGION:-ap-southeast-1}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET:-}
+      S3_PUBLIC_BASE_URL: ${S3_PUBLIC_BASE_URL:-}
+    ports:
+      - "8080:8080"
+
