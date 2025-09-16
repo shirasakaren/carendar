@@ -61,3 +61,27 @@ Recoverer → RequestID → SecurityHeaders → CORS → Logger → handler
 
 `/api/admin/auth` additionally passes through a per-IP rate limiter
 (10 attempts/minute) before reaching the login handler.
+
+## Deployment model
+
+Both apps ship as containers built from the repository root:
+
+- `apps/backend/Dockerfile` — two-stage Go build into
+  `distroless/static-debian12:nonroot`; migrations are baked in at
+  `/app/migrations` and applied on startup.
+- `apps/frontend/Dockerfile` — npm workspaces install at the root,
+  then a Next.js standalone build whose traced output (including the
+  hoisted `node_modules`) is copied into a minimal `node:20-alpine`
+  runtime.
+
+`docker-compose.yml` wires the three services together: Postgres 16
+(health-checked), the API (probed via its `-healthcheck` mode), and the
+frontend. Host-side ports are configurable through
+`FRONTEND_PORT` / `BACKEND_PORT` / `POSTGRES_PORT` so the stack can run
+alongside other services on a developer machine.
+
+CI mirrors the repo layout: one workflow set, four jobs — Go
+vet/build/test (+race), frontend typecheck/build, and Docker build
+smokes for each image. `staging` and `production` workflows publish
+both images to Docker Hub and skip gracefully when credentials are not
+configured.
