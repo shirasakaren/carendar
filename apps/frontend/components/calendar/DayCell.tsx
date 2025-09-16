@@ -45,9 +45,18 @@ export function DayCell({
   const numberColor = inCurrentMonth ? "text-ink" : "text-ink-4";
   const interactive = !!onSelect;
 
+  const dayLabel = date.toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  const countLabel =
+    events.length === 0 ? "tidak ada event" : `${events.length} event`;
+
   return (
     <div
       onClick={interactive ? () => onSelect!(date) : undefined}
+      aria-label={`${dayLabel}, ${countLabel}`}
       className={`group relative flex flex-col gap-1 p-1.5 md:p-2 min-h-[96px] md:min-h-[120px] rounded border border-line ${cellBg} shadow-1 ${interactive ? "cursor-pointer hover:border-line-strong hover:shadow-2 transition-[box-shadow,border-color] duration-120" : ""}`}
     >
       <div className="flex items-center justify-between mb-0.5 px-0.5">
