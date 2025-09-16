@@ -25,6 +25,9 @@ async function authedFetch(path: string, init: RequestInit = {}): Promise<Respon
     ...init,
     headers,
     credentials: "include",
+    // Bound every admin request so a stalled upload/API never leaves the
+    // UI hanging forever. Callers may pass their own signal to opt out.
+    signal: init.signal ?? AbortSignal.timeout(15_000),
   });
   if (res.status === 401) {
     clearToken();
