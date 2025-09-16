@@ -16,6 +16,16 @@ import (
 
 var ErrNotFound = errors.New("event not found")
 
+// jakartaLoc is resolved once at startup — LoadLocation is a non-trivial
+// lookup (tzdata parse + zone pick) and every month-window query pays it.
+var jakartaLoc = func() *time.Location {
+	loc, err := time.LoadLocation("Asia/Jakarta")
+	if err != nil || loc == nil {
+		return time.UTC
+	}
+	return loc
+}()
+
 type EventRepository struct {
 	pool *pgxpool.Pool
 }
@@ -33,11 +43,7 @@ const eventColumns = `
 func (r *EventRepository) Pool() *pgxpool.Pool { return r.pool }
 
 func (r *EventRepository) ListByMonth(ctx context.Context, year int, month time.Month, publishedOnly bool) ([]model.Event, error) {
-	loc, _ := time.LoadLocation("Asia/Jakarta")
-	if loc == nil {
-		loc = time.UTC
-	}
-	monthStart := time.Date(year, month, 1, 0, 0, 0, 0, loc)
+	monthStart := time.Date(year, month, 1, 0, 0, 0, 0, jakartaLoc)
 	monthEnd := monthStart.AddDate(0, 1, 0)
 
 	q := `SELECT ` + eventColumns + `
