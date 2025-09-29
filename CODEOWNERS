@@ -1,0 +1,11 @@
+# Default owners for everything in the repo.
+* @shirasakaren
+
+# Backend (Go API)
+/apps/backend/ @shirasakaren
+
+# Frontend (Next.js)
+/apps/frontend/ @shirasakaren
+
+# CI/CD
+/.github/ @shirasakaren
