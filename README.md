@@ -197,3 +197,47 @@ wall-clock time on edit.
 - The TipTap renderer only allows `http(s)`, `mailto`, relative, and
   `data:image/*` URLs.
 - Reduced motion is respected globally via `prefers-reduced-motion`.
+
+## Backend layout
+
+```
+apps/backend/
+  cmd/server/          main — wiring, migrations, graceful shutdown
+  internal/
+    config/            env loader (godotenv + os.Getenv)
+    db/                pgxpool connector
+    httpx/             JSON encode/decode helpers
+    middleware/        CORS, request logger, RequireAdmin JWT gate
+    model/             Event, Category, LocationKind, Attachment
+    repository/        pgx queries
+    service/
+      auth.go          password check + JWT mint/verify
+      event.go         create / update / delete + recurrence expansion
+      recurrence.go    RRULE → []time.Time
+      s3.go            multipart upload to S3
+    handler/           HTTP handlers + chi router
+  migrations/          single squashed baseline (0001_init), applied on startup
+```
+
+## Testing
+
+```bash
+# backend — race detector on
+make test              # or: cd apps/backend && go test -race ./...
+
+# frontend — typecheck + production build
+make typecheck
+make build
+```
+
+## CI/CD
+
+Three workflows live in `.github/workflows` (see the
+[workflow README](.github/workflows/README.md) for the full table):
+
+- `ci.yml` — every push and PR: Go vet/build/test (+race), frontend
+  typecheck/build, and Docker build smokes for both images.
+- `staging.yml` — pushes to `staging`: builds and tags both images
+  with `staging` tags.
+- `production.yml` — pushes to `main` and `v*` tags: builds and tags
+  both images with `latest`.
