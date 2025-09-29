@@ -76,3 +76,55 @@ required ones:
 
 S3 vars are optional — if unset, `/api/admin/upload` returns
 `503 uploads not configured` but the rest of the API works.
+
+## API
+
+### Public
+
+| Method | Path | Notes |
+|---|---|---|
+| `GET` | `/api/healthz` | Liveness probe |
+| `GET` | `/api/events?month=YYYY-MM` | Published events overlapping the month (defaults to current month) |
+| `GET` | `/api/events/{id}` | Single published event |
+| `GET` | `/api/calendar.ics?categories=a,b` | iCalendar feed of published, subscription-enabled events |
+
+### Admin (JWT — `Authorization: Bearer <token>` or the `mgm_admin_token` cookie)
+
+| Method | Path | Notes |
+|---|---|---|
+| `POST` | `/api/admin/auth` | `{"password": "…"}` → sets an httpOnly cookie + returns `{token, expires_at}` |
+| `POST` | `/api/admin/logout` | Clears the cookie |
+| `GET` | `/api/admin/me` | "Still authenticated" probe |
+| `GET` | `/api/admin/events?month=YYYY-MM` | Includes drafts |
+| `GET` | `/api/admin/events/{id}` | Includes drafts |
+| `POST` | `/api/admin/events` | Create. Recurring parents materialise children up to 2 years out |
+| `PUT` | `/api/admin/events/{id}` | Update. Children are wiped and regenerated. Instances can't be edited directly — edit the parent |
+| `DELETE` | `/api/admin/events/{id}` | Delete (cascades to children) |
+| `POST` | `/api/admin/upload` | `multipart/form-data`, `file=` (max 100 MiB) → `{url, name, type, size}` |
+
+### Event payload (write)
+
+```jsonc
+{
+  "title": "Rapat Koordinasi",
+  "category": "internal_events",   // one of the 11 categories below
+  "color": "#3a6dc5",              // optional; defaults from category
+  "description_json": { "type": "doc", "content": [/* TipTap nodes */] },
+  "thumbnail_url": "https://...",
+  "start_datetime": "2026-05-18T09:00:00+07:00",
+  "end_datetime":   "2026-05-18T10:30:00+07:00",
+  "is_all_day": false,
+  "location": "Lab A",
+  "location_type": "physical",     // physical | online | hybrid
+  "meeting_link": null,
+  "dresscode": "Smart casual",
+  "attendees": ["Idham", "Bu Rina"],
+  "attachments": [
+    { "name": "agenda.pdf", "url": "https://...", "type": "application/pdf", "size": 18432 }
+  ],
+  "recurrence_rule": "FREQ=WEEKLY;BYDAY=MO",  // iCal RRULE; null for non-recurring
+  "recurrence_end_date": "2026-12-31",        // YYYY-MM-DD or null
+  "show_in_subscription": true,
+  "is_published": true
+}
+```
