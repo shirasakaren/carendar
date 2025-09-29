@@ -31,3 +31,11 @@ test-go:
 vet: ## go vet the backend
 	cd apps/backend && go vet ./...
 
+docker-up: ## Start the full stack: db + backend + frontend
+	docker compose up --build
+
+docker-down: ## Stop the stack
+	docker compose down
+
+migrate: ## Apply migrations and start the backend (bare metal)
+	cd apps/backend && go run ./cmd/server
