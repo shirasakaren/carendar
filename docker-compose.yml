@@ -1,3 +1,5 @@
+name: carendar
+
 services:
   db:
     image: postgres:16-alpine
@@ -11,7 +13,7 @@ services:
     ports:
       # Override the host-side port if 5432 is taken on the host, e.g.
       # POSTGRES_PORT=5433. The container always listens on 5432.
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mgm} -d ${POSTGRES_DB:-mgm_calendar}"]
       interval: 5s
@@ -40,7 +42,13 @@ services:
       AWS_S3_BUCKET: ${AWS_S3_BUCKET:-}
       S3_PUBLIC_BASE_URL: ${S3_PUBLIC_BASE_URL:-}
     ports:
-      - "8080:8080"
+      - "${BACKEND_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "/app/server", "-healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   frontend:
     build:
@@ -55,7 +63,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "3000:3000"
+      - "${FRONTEND_PORT:-3000}:3000"
     environment:
       NODE_ENV: production
 
