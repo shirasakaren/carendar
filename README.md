@@ -182,3 +182,18 @@ Editor date/time pickers are interpreted as **Asia/Jakarta (WIB)**
 regardless of the admin's browser timezone, so "14:00 on 18 Mei 2026"
 is stored as `2026-05-18T14:00:00+07:00` and round-trips to the same
 wall-clock time on edit.
+
+## Calendar behaviour
+
+- Weeks start on **Monday**; "today" is a filled brand-blue circle
+  computed in WIB.
+- Days outside the current month render muted; color only ever lives in
+  the chips.
+- Each cell shows up to 3 chips; overflow becomes `+N lainnya`.
+- Date format `14 Mei 2026`, time format `13.00 WIB`, with a live WIB
+  clock in the header.
+- Loading uses chip-skeletons inside in-month cells — no first-paint
+  spinners.
+- The TipTap renderer only allows `http(s)`, `mailto`, relative, and
+  `data:image/*` URLs.
+- Reduced motion is respected globally via `prefers-reduced-motion`.
