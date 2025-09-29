@@ -241,3 +241,19 @@ Three workflows live in `.github/workflows` (see the
   with `staging` tags.
 - `production.yml` — pushes to `main` and `v*` tags: builds and tags
   both images with `latest`.
+
+## Known limitations
+
+- Admin sessions are token-only (no refresh). After 8 hours the next
+  admin request 401s and the user is bounced back to login.
+- The token lives in `localStorage` — fine for an internal tool with a
+  single shared password, not for pages that render third-party
+  content.
+- Upload progress isn't surfaced (single fetch, no XHR events).
+- Recurrence editing always regenerates children; per-instance edits
+  and RFC 5545 `EXDATE` exceptions are not supported.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Security reports go to
+**security@shirasaka.ren** (see [SECURITY.md](SECURITY.md)).
