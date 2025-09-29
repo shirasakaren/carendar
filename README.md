@@ -27,3 +27,52 @@ apps/
 | Auth | localStorage token + httpOnly cookie | Shared admin password + HS256 JWT (8 h TTL) |
 | Files | — | AWS S3 (`aws-sdk-go-v2`) |
 | Recurrence | UI builder → iCal RRULE | [`teambition/rrule-go`](https://github.com/teambition/rrule-go) expansion |
+
+## Quick start
+
+### Docker (full stack)
+
+```bash
+cp .env.example .env
+# edit .env: at minimum set ADMIN_PASSWORD and JWT_SECRET. For uploads,
+# fill in the AWS_* / S3 vars.
+docker compose up --build
+
+# frontend  → http://localhost:3000
+# backend   → http://localhost:8080
+# postgres  → localhost:5432
+```
+
+Migrations apply automatically on backend startup.
+
+### Bare metal (development)
+
+```bash
+cp .env.example .env
+docker compose up -d db            # or run your own Postgres
+
+# terminal 1 — backend
+cd apps/backend
+export $(grep -v '^#' ../../.env | xargs)
+export DATABASE_URL=postgres://mgm:mgm_dev_password@localhost:5432/mgm_calendar?sslmode=disable
+go run ./cmd/server
+
+# terminal 2 — frontend
+npm ci
+npm run dev                        # http://localhost:3000
+```
+
+## Environment variables
+
+See [`.env.example`](.env.example) for the full annotated list. The
+required ones:
+
+| Var | Notes |
+|---|---|
+| `DATABASE_URL` | `postgres://user:pass@host:5432/db?sslmode=disable` |
+| `ADMIN_PASSWORD` | Shared admin login. Change before deploying. |
+| `JWT_SECRET` | At least 16 chars. Used to sign session tokens. |
+| `NEXT_PUBLIC_API_URL` | Backend base URL the browser calls. Baked into the frontend bundle at build time. |
+
+S3 vars are optional — if unset, `/api/admin/upload` returns
+`503 uploads not configured` but the rest of the API works.
