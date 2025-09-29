@@ -18,6 +18,7 @@ jobs:
   backend:
     name: backend · vet · build · test
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: apps/backend
@@ -44,6 +45,7 @@ jobs:
   backend-docker:
     name: backend · docker build smoke
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -63,6 +65,7 @@ jobs:
   frontend:
     name: frontend · typecheck · build
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'http://localhost:8080' }}
       NEXT_TELEMETRY_DISABLED: "1"
@@ -88,6 +91,7 @@ jobs:
   frontend-docker:
     name: frontend · docker build smoke
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
