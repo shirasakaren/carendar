@@ -128,3 +128,57 @@ S3 vars are optional — if unset, `/api/admin/upload` returns
   "is_published": true
 }
 ```
+
+### Errors
+
+Every error response is JSON with a single `error` field:
+
+```jsonc
+{ "error": "invalid category \"foo\"" }
+```
+
+Validation failures return `400`, auth failures `401`, missing
+resources `404`, and rate-limited logins `429`.
+
+## Admin panel
+
+- **Login** — a real password login. `POST /api/admin/auth` sets an
+  httpOnly `mgm_admin_token` cookie and returns the token; the frontend
+  keeps it in `localStorage` and sends it as a Bearer header on every
+  admin request. `AdminGuard` probes `/api/admin/me` on each `/admin/*`
+  mount; a 401 bounces back to the login modal.
+- **Admin calendar** — the same grid as the public view in an
+  inverse-dark banner ("Mode Admin"), with a hover/focus `+ Tambah`
+  affordance on every cell. Clicking a chip opens the admin popup with
+  an **Edit** button; recurring instances bounce to their parent.
+  Empty days go straight to `/admin/events/new?date=YYYY-MM-DD`; days
+  with events open a right slide-in **Day Events Drawer**.
+- **Event editor** — a two-column page (rich-text body / metadata
+  sidebar): title, TipTap body with full toolbar, category, color
+  (closed MGM palette only), thumbnail + attachments (S3), all-day
+  toggle, start/end, location type + text, meeting link, dresscode,
+  attendee chips, and a recurrence builder. A sticky bottom save bar
+  offers **Simpan Draft**, **Publikasikan**, and inline-confirm
+  **Hapus Event**.
+
+### Recurrence → RRULE
+
+| UI | Output |
+|---|---|
+| Tidak berulang | `recurrence_rule = null` |
+| Setiap hari | `FREQ=DAILY` |
+| Setiap minggu, Sen + Rab | `FREQ=WEEKLY;BYDAY=MO,WE` |
+| Setiap bulan | `FREQ=MONTHLY` |
+| Setiap tahun | `FREQ=YEARLY` |
+| Berakhir: Pada tanggal | `recurrence_end_date = "YYYY-MM-DD"` (separate column) |
+| Berakhir: Setelah N kali | appended as `;COUNT=N` |
+
+Children are materialised on save (up to 2 years from the parent
+start) and link back via `parent_event_id`.
+
+### Timestamps
+
+Editor date/time pickers are interpreted as **Asia/Jakarta (WIB)**
+regardless of the admin's browser timezone, so "14:00 on 18 Mei 2026"
+is stored as `2026-05-18T14:00:00+07:00` and round-trips to the same
+wall-clock time on edit.
