@@ -99,3 +99,29 @@ func TestWriteICSLineFolding(t *testing.T) {
 		}
 	}
 }
+
+func TestBuildICSDescription(t *testing.T) {
+	link := "https://meet.example.com/xyz"
+	dress := "Smart casual"
+	ev := model.Event{
+		MeetingLink: &link,
+		Dresscode:   &dress,
+		Attendees:   []string{"Idham", "Bu Rina"},
+	}
+	got := buildICSDescription(&ev)
+	for _, want := range []string{
+		"Tautan rapat: https://meet.example.com/xyz",
+		"Dresscode: Smart casual",
+		"Peserta: Idham, Bu Rina",
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("description missing %q:\n%s", want, got)
+		}
+	}
+}
+
+func TestBuildICSDescriptionEmpty(t *testing.T) {
+	if got := buildICSDescription(&model.Event{}); got != "" {
+		t.Fatalf("expected empty description, got %q", got)
+	}
+}
