@@ -43,8 +43,7 @@ const eventColumns = `
 func (r *EventRepository) Pool() *pgxpool.Pool { return r.pool }
 
 func (r *EventRepository) ListByMonth(ctx context.Context, year int, month time.Month, publishedOnly bool) ([]model.Event, error) {
-	monthStart := time.Date(year, month, 1, 0, 0, 0, 0, jakartaLoc)
-	monthEnd := monthStart.AddDate(0, 1, 0)
+	monthStart, monthEnd := monthWindow(year, month)
 
 	q := `SELECT ` + eventColumns + `
 		FROM events
@@ -158,6 +157,13 @@ func (r *EventRepository) Delete(ctx context.Context, id uuid.UUID) error {
 func (r *EventRepository) DeleteChildren(ctx context.Context, parentID uuid.UUID) error {
 	_, err := r.pool.Exec(ctx, `DELETE FROM events WHERE parent_event_id = $1`, parentID)
 	return err
+}
+
+// monthWindow returns the half-open [start, end) interval covering a
+// calendar month in the Jakarta timezone.
+func monthWindow(year int, month time.Month) (time.Time, time.Time) {
+	start := time.Date(year, month, 1, 0, 0, 0, 0, jakartaLoc)
+	return start, start.AddDate(0, 1, 0)
 }
 
 // ListForSubscription returns every published event flagged for calendar
