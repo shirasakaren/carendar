@@ -69,3 +69,12 @@ Scopes are optional but encouraged: `feat(backend): …`,
   validation…).
 - Frontend: we currently rely on `tsc` and manual review. If a PR is
   complex, describe your manual test plan in the PR body.
+
+## Release checklist
+
+1. Promote `staging` → `main` through a normal PR.
+2. Update `CHANGELOG.md` and bump the version in `package.json`.
+3. Tag the release: `git tag -a vX.Y.Z -m "Carendar vX.Y.Z — …"`.
+4. `git push --tags` — the production workflow picks up `v*` tags and
+   publishes both images.
+5. Verify the tag on the releases page and that CI is green.
