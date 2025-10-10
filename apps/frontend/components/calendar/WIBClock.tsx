@@ -23,9 +23,25 @@ export function WIBClock() {
       interval = setInterval(tick, 1000);
     }, delay);
 
+    // Pause while the tab is hidden — background tabs don't need a
+    // per-second render, and browsers throttle timers anyway.
+    const onVisible = () => {
+      if (document.visibilityState === "hidden") {
+        if (interval !== null) {
+          clearInterval(interval);
+          interval = null;
+        }
+      } else if (interval === null) {
+        tick();
+        interval = setInterval(tick, 1000);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisible);
+
     return () => {
       clearTimeout(timeout);
       if (interval !== null) clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
     };
   }, []);
 
