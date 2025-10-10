@@ -76,6 +76,7 @@ func main() {
 		Addr:              ":" + cfg.Port,
 		Handler:           r,
 		ReadHeaderTimeout: 10 * time.Second,
+		IdleTimeout:       60 * time.Second,
 	}
 
 	go func() {
