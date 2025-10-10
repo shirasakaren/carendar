@@ -90,3 +90,17 @@ func TestExpandRecurrenceWeeklyByDay(t *testing.T) {
 		}
 	}
 }
+
+func TestExpandRecurrenceCountBeatsEndDate(t *testing.T) {
+	loc := jakarta(t)
+	start := time.Date(2026, 9, 1, 9, 0, 0, 0, loc)
+	end := start.AddDate(0, 0, 30) // generous bound…
+	// …but COUNT=2 ends the series first.
+	times, err := ExpandRecurrence("FREQ=DAILY;COUNT=2", start, &end)
+	if err != nil {
+		t.Fatalf("expand: %v", err)
+	}
+	if len(times) != 1 {
+		t.Fatalf("got %d occurrences, want 1 (COUNT=2 caps before the end date)", len(times))
+	}
+}
