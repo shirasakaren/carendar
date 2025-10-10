@@ -53,3 +53,14 @@ func TestDecodeJSONRejectsUnknownFields(t *testing.T) {
 		t.Fatal("expected an error for unknown field")
 	}
 }
+
+func TestDecodeJSONRejectsTrailingData(t *testing.T) {
+	var dst struct {
+		Title string `json:"title"`
+	}
+	body := strings.NewReader(`{"title":"x"} {"title":"y"}`)
+	req := httptest.NewRequest(http.MethodPost, "/", body)
+	if err := DecodeJSON(req, &dst); err == nil {
+		t.Fatal("expected an error for trailing JSON data")
+	}
+}
