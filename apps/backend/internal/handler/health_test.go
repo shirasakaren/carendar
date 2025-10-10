@@ -19,4 +19,7 @@ func TestHealthz(t *testing.T) {
 	if !strings.Contains(rec.Body.String(), `"status":"ok"`) {
 		t.Fatalf("body = %q", rec.Body.String())
 	}
+	if !strings.Contains(rec.Body.String(), `"version":`) {
+		t.Fatalf("body = %q, want a version field", rec.Body.String())
+	}
 }
