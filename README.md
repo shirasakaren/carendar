@@ -255,5 +255,6 @@ Three workflows live in `.github/workflows` (see the
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Security reports go to
+See [CONTRIBUTING.md](CONTRIBUTING.md) and the
+[architecture notes](docs/architecture.md). Security reports go to
 **security@shirasaka.ren** (see [SECURITY.md](SECURITY.md)).
