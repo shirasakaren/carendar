@@ -3,6 +3,20 @@
 All notable changes to Carendar are documented in this file. The project
 follows [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] — 2025-10-08
+
+### Added
+
+- Backend: public iCalendar subscription feed (`/api/calendar.ics`) with
+  per-category filtering via `?categories=`.
+- Frontend: `SyncCalendarModal` with copyable feed URLs per category.
+- Backend: `show_in_subscription` opt-in flag on events.
+
+### Changed
+
+- Migrations squashed into a single baseline (`0001_init`).
+- Go module renamed to `github.com/shirasakaren/carendar/apps/backend`.
+
 ## [0.2.0] — 2025-09-09
 
 ### Added
@@ -27,3 +41,7 @@ follows [Semantic Versioning](https://semver.org/).
 - Backend REST API: list/get events by month, admin CRUD, recurrence
   materialisation up to 2 years, S3 uploads.
 - PostgreSQL schema with `set_updated_at` trigger and per-event colors.
+
+[0.3.0]: https://github.com/shirasakaren/carendar/releases/tag/v0.3.0
+[0.2.0]: https://github.com/shirasakaren/carendar/releases/tag/v0.2.0
+[0.1.0]: https://github.com/shirasakaren/carendar/releases/tag/v0.1.0
