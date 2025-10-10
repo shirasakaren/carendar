@@ -33,5 +33,13 @@ func DecodeJSON(r *http.Request, dst any) error {
 	defer r.Body.Close()
 	dec := json.NewDecoder(r.Body)
 	dec.DisallowUnknownFields()
-	return dec.Decode(dst)
+	if err := dec.Decode(dst); err != nil {
+		return err
+	}
+	// Reject requests that carry a second JSON value after the first —
+	// silently ignoring it can mask client bugs.
+	if dec.More() {
+		return errors.New("unexpected trailing data")
+	}
+	return nil
 }
