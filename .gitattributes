@@ -1,0 +1,18 @@
+# Normalise line endings across platforms: everything text is LF in the
+# working tree, and CRLF is forced on Windows checkouts via autocrlf.
+* text=auto eol=lf
+
+# Go sources and build metadata
+*.go text eol=lf
+go.mod text eol=lf
+go.sum text eol=lf
+
+# Binary assets never get newline conversion
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text
+*.woff binary
+*.woff2 binary
