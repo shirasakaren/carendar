@@ -19,6 +19,10 @@ type Deps struct {
 	AllowedOrigin string
 }
 
+// Version is stamped into healthz responses so deployments can verify
+// which build they are running.
+const Version = "0.4.0"
+
 type Handler struct {
 	auth   *service.Auth
 	events *service.EventService
@@ -71,5 +75,5 @@ func NewRouter(deps Deps) http.Handler {
 }
 
 func (h *Handler) Healthz(w http.ResponseWriter, r *http.Request) {
-	httpx.JSON(w, http.StatusOK, map[string]string{"status": "ok"})
+	httpx.JSON(w, http.StatusOK, map[string]string{"status": "ok", "version": Version})
 }
