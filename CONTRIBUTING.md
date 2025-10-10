@@ -17,6 +17,8 @@ only workspace. All Go tooling runs from `apps/backend`.
 
 ## Getting started
 
+You need Node.js 20+ and Go 1.25+.
+
 ```bash
 cp .env.example .env
 
