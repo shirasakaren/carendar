@@ -5,6 +5,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -38,5 +39,19 @@ func TestUploadWithoutS3Returns503(t *testing.T) {
 
 	if rec.Code != http.StatusServiceUnavailable {
 		t.Fatalf("status = %d, want 503 when S3 is not configured", rec.Code)
+	}
+}
+
+func TestUploadSkipsParsingWhenS3Disabled(t *testing.T) {
+	h := &Handler{}
+	// A malformed multipart body: a parse would 400, but the S3 check
+	// must short-circuit first and answer 503 instead.
+	req := httptest.NewRequest(http.MethodPost, "/api/admin/upload", strings.NewReader("this is not multipart"))
+	req.Header.Set("Content-Type", "multipart/form-data; boundary=x")
+	rec := httptest.NewRecorder()
+	h.Upload(rec, req)
+
+	if rec.Code != http.StatusServiceUnavailable {
+		t.Fatalf("status = %d, want 503 short-circuit before parsing", rec.Code)
 	}
 }
