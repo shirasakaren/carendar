@@ -38,6 +38,7 @@ func NewRouter(deps Deps) http.Handler {
 
 	r := chi.NewRouter()
 	r.Use(chimw.Recoverer)
+	r.Use(chimw.Compress(5))
 	r.Use(middleware.RequestID)
 	r.Use(middleware.SecurityHeaders)
 	r.Use(middleware.CORS(deps.AllowedOrigin))
