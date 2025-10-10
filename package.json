@@ -6,8 +6,8 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace apps/frontend",
-    "build": "npm run build --workspace apps/frontend",
-    "start": "npm run start --workspace apps/frontend"
+    "dev": "npm run dev --workspace @carendar/frontend",
+    "build": "npm run build --workspace @carendar/frontend",
+    "start": "npm run start --workspace @carendar/frontend"
   }
 }
