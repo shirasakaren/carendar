@@ -3,6 +3,8 @@ package handler
 import (
 	"testing"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 func TestParseMonth(t *testing.T) {
@@ -44,5 +46,27 @@ func TestTrimList(t *testing.T) {
 	}
 	if trimList([]string{"  "}) != nil {
 		t.Fatal("trimList of blank-only input should collapse to nil")
+	}
+}
+
+func TestEventRequestToModelTrims(t *testing.T) {
+	start := time.Date(2026, 9, 10, 9, 0, 0, 0, time.UTC)
+	blankEnd := "   "
+	req := eventRequest{
+		Title:             "  Rapat  ",
+		Category:          "internal_events",
+		StartDatetime:     start,
+		EndDatetime:       start.Add(time.Hour),
+		RecurrenceEndDate: &blankEnd,
+	}
+	e, err := req.toModel(uuid.New())
+	if err != nil {
+		t.Fatalf("toModel: %v", err)
+	}
+	if e.Title != "Rapat" {
+		t.Fatalf("title = %q, want trimmed", e.Title)
+	}
+	if e.RecurrenceEndDate != nil {
+		t.Fatal("blank recurrence end date should be treated as unset")
 	}
 }
