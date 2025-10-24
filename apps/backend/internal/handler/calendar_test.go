@@ -133,3 +133,14 @@ func TestEscapeICSCRLF(t *testing.T) {
 		t.Fatalf("escapeICS = %q, want %q", got, want)
 	}
 }
+
+func TestWriteICSLineFoldRespectsUTF8(t *testing.T) {
+	var b strings.Builder
+	long := "SUMMARY:" + strings.Repeat("é", 60) // 2-byte runes force careful folding
+	writeICSLine(&b, long)
+	for _, ln := range strings.Split(strings.TrimRight(b.String(), "\r\n"), "\r\n") {
+		if strings.ToValidUTF8(ln, "") != ln {
+			t.Fatalf("folded line splits a UTF-8 sequence: %q", ln)
+		}
+	}
+}
