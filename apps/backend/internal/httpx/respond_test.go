@@ -64,3 +64,15 @@ func TestDecodeJSONRejectsTrailingData(t *testing.T) {
 		t.Fatal("expected an error for trailing JSON data")
 	}
 }
+
+func TestJSONNilValue(t *testing.T) {
+	rec := httptest.NewRecorder()
+	JSON(rec, http.StatusOK, nil)
+	// Status is still written; a nil payload simply skips the encoder.
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want 200", rec.Code)
+	}
+	if rec.Body.Len() != 0 {
+		t.Fatalf("body = %q, want empty for nil payloads", rec.Body.String())
+	}
+}
