@@ -70,3 +70,27 @@ func TestRateLimitPrefersForwardedFor(t *testing.T) {
 		t.Fatalf("second with same XFF: status %d, want 429", rec.Code)
 	}
 }
+
+func TestRateLimitWindowResets(t *testing.T) {
+	h := RateLimit(1, 40*time.Millisecond)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	mk := func() int {
+		req := httptest.NewRequest(http.MethodPost, "/api/admin/auth", nil)
+		req.RemoteAddr = "192.0.2.12:1234"
+		rec := httptest.NewRecorder()
+		h.ServeHTTP(rec, req)
+		return rec.Code
+	}
+
+	if got := mk(); got != http.StatusNoContent {
+		t.Fatalf("first request: %d, want 204", got)
+	}
+	if got := mk(); got != http.StatusTooManyRequests {
+		t.Fatalf("second request in window: %d, want 429", got)
+	}
+	time.Sleep(80 * time.Millisecond) // let the window expire
+	if got := mk(); got != http.StatusNoContent {
+		t.Fatalf("request after window expiry: %d, want 204", got)
+	}
+}
