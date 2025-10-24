@@ -23,6 +23,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Kalender — MGM Laboratory",
   description: "Kalender event MGM Laboratory.",
+  openGraph: {
+    title: "Kalender — MGM Laboratory",
+    description: "Kalender event MGM Laboratory.",
+    locale: "id_ID",
+    type: "website",
+  },
 };
 
 export const viewport: Viewport = {
