@@ -264,6 +264,15 @@ Three workflows live in `.github/workflows` (see the
 - Recurrence editing always regenerates children; per-instance edits
   and RFC 5545 `EXDATE` exceptions are not supported.
 
+## Troubleshooting
+
+| Symptom | Likely cause |
+|---|---|
+| `migrate: …` error on backend startup | `DATABASE_URL` unreachable or wrong credentials |
+| Uploads return `503` | `AWS_*` / `S3` variables not set (or the bucket is missing) |
+| Admin API returns `401` on every request | Token expired (8 h TTL) — log in again |
+| Frontend builds but the calendar is empty | `NEXT_PUBLIC_API_URL` points at the wrong host |
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) and the
