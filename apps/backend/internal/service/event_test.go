@@ -94,3 +94,15 @@ func TestIsRecurring(t *testing.T) {
 		t.Fatal("event with a rule should be recurring")
 	}
 }
+
+func TestRecurrenceCapRejectsHourlyRules(t *testing.T) {
+	s := &EventService{} // repo stays nil: the cap fires before any insert
+	e := testEvent()
+	rule := "FREQ=HOURLY" // 2 years of hours ≈ 17k instances
+	e.RecurrenceRule = &rule
+
+	err := s.expandAndInsert(t.Context(), e)
+	if err == nil {
+		t.Fatal("expected the child cap to reject an hourly rule")
+	}
+}
