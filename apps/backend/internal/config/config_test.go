@@ -80,3 +80,20 @@ func TestS3PublicBaseURLTrimsTrailingSlash(t *testing.T) {
 		t.Errorf("public base = %q, want trailing slash trimmed", cfg.S3PublicBaseURL)
 	}
 }
+
+func TestLoadTTLFallsBackOnGarbage(t *testing.T) {
+	setenvs(t,
+		"DATABASE_URL=postgres://u:p@localhost/db",
+		"ADMIN_PASSWORD=pw",
+		"JWT_SECRET=0123456789abcdef",
+		"JWT_TTL_HOURS=not-a-number",
+	)
+
+	cfg, err := Load()
+	if err != nil {
+		t.Fatalf("load: %v", err)
+	}
+	if cfg.JWTTTLHours != 8 {
+		t.Errorf("ttl = %d, want fallback 8", cfg.JWTTTLHours)
+	}
+}
