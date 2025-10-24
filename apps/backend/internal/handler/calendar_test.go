@@ -125,3 +125,11 @@ func TestBuildICSDescriptionEmpty(t *testing.T) {
 		t.Fatalf("expected empty description, got %q", got)
 	}
 }
+
+func TestEscapeICSCRLF(t *testing.T) {
+	got := escapeICS("baris1\r\nbaris2\rbaris3")
+	want := "baris1\\nbaris2\\nbaris3"
+	if got != want {
+		t.Fatalf("escapeICS = %q, want %q", got, want)
+	}
+}
