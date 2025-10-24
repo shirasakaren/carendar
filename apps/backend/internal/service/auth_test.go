@@ -43,3 +43,13 @@ func TestAuthTTL(t *testing.T) {
 		t.Fatalf("TTL = %v", a.TTL())
 	}
 }
+
+func TestAuthEmptyAdminPassword(t *testing.T) {
+	a := NewAuth("", []byte("0123456789abcdef"), time.Hour)
+	if a.CheckPassword("") {
+		t.Fatal("empty admin password must never authenticate")
+	}
+	if a.CheckPassword("anything") {
+		t.Fatal("any password must fail when no admin password is configured")
+	}
+}
