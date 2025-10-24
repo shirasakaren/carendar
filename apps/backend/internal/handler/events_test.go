@@ -70,3 +70,17 @@ func TestEventRequestToModelTrims(t *testing.T) {
 		t.Fatal("blank recurrence end date should be treated as unset")
 	}
 }
+
+func TestParseMonthYearBounds(t *testing.T) {
+	if _, _, err := parseMonth("1900-01"); err != nil {
+		t.Fatalf("1900 should be accepted: %v", err)
+	}
+	if _, _, err := parseMonth("9999-12"); err != nil {
+		t.Fatalf("9999 should be accepted: %v", err)
+	}
+	for _, in := range []string{"1899-12", "10000-01"} {
+		if _, _, err := parseMonth(in); err == nil {
+			t.Errorf("parseMonth(%q) should fail", in)
+		}
+	}
+}
