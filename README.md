@@ -140,17 +140,6 @@ Every error response is JSON with a single `error` field:
 Validation failures return `400`, auth failures `401`, missing
 resources `404`, and rate-limited logins `429`.
 
-### Errors
-
-Every error response is JSON with a single `error` field:
-
-```jsonc
-{ "error": "invalid category \"foo\"" }
-```
-
-Validation failures return `400`, auth failures `401`, missing
-resources `404`, and rate-limited logins `429`.
-
 ## Admin panel
 
 - **Login** — a real password login. `POST /api/admin/auth` sets an
@@ -278,3 +267,7 @@ Three workflows live in `.github/workflows` (see the
 See [CONTRIBUTING.md](CONTRIBUTING.md) and the
 [architecture notes](docs/architecture.md). Security reports go to
 **security@shirasaka.ren** (see [SECURITY.md](SECURITY.md)).
+
+## License
+
+[ESDL](LICENSE)
