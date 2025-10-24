@@ -3,6 +3,24 @@
 All notable changes to Carendar are documented in this file. The project
 follows [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] — 2025-10-29
+
+### Added
+
+- Monorepo is fully self-contained: single `docker compose up` starts the
+  database, backend, and frontend from one checkout.
+- `-healthcheck` mode for the backend binary so the distroless image can
+  be health-checked from docker-compose without a shell.
+- `Makefile` with the common dev, test, and docker targets.
+
+### Changed
+
+- Merged the CI pipelines into one set of workflows with per-app jobs.
+- Deploy workflows (`staging` / `production`) build and tag both images
+  (`carendar-backend`, `carendar-frontend`) and skip gracefully when
+  Docker Hub credentials are not configured.
+- README rewritten for the monorepo layout.
+
 ## [0.3.0] — 2025-10-08
 
 ### Added
@@ -42,6 +60,7 @@ follows [Semantic Versioning](https://semver.org/).
   materialisation up to 2 years, S3 uploads.
 - PostgreSQL schema with `set_updated_at` trigger and per-event colors.
 
+[0.4.0]: https://github.com/shirasakaren/carendar/releases/tag/v0.4.0
 [0.3.0]: https://github.com/shirasakaren/carendar/releases/tag/v0.3.0
 [0.2.0]: https://github.com/shirasakaren/carendar/releases/tag/v0.2.0
 [0.1.0]: https://github.com/shirasakaren/carendar/releases/tag/v0.1.0
