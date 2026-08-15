@@ -97,3 +97,21 @@ func TestLoadTTLFallsBackOnGarbage(t *testing.T) {
 		t.Errorf("ttl = %d, want fallback 8", cfg.JWTTTLHours)
 	}
 }
+
+func TestLoadParsesMultipleOrigins(t *testing.T) {
+	setenvs(t,
+		"DATABASE_URL=postgres://u:p@localhost/db",
+		"ADMIN_PASSWORD=pw",
+		"JWT_SECRET=0123456789abcdef",
+		"ALLOWED_ORIGIN=http://localhost:3000, https://kalender.mgm-lab.id",
+	)
+
+	cfg, err := Load()
+	if err != nil {
+		t.Fatalf("load: %v", err)
+	}
+	want := []string{"http://localhost:3000", "https://kalender.mgm-lab.id"}
+	if len(cfg.AllowedOrigins) != 2 || cfg.AllowedOrigins[0] != want[0] || cfg.AllowedOrigins[1] != want[1] {
+		t.Fatalf("allowed origins = %#v, want %#v", cfg.AllowedOrigins, want)
+	}
+}

@@ -11,8 +11,8 @@ import (
 
 func testDeps() Deps {
 	return Deps{
-		Auth:          service.NewAuth("pw", []byte("0123456789abcdef"), 0),
-		AllowedOrigin: "http://localhost:3000",
+		Auth:           service.NewAuth("pw", []byte("0123456789abcdef"), 0),
+		AllowedOrigins: []string{"http://localhost:3000"},
 	}
 }
 

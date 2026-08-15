@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 	_ "time/tzdata" // embed IANA tz data so Asia/Jakarta works in distroless
@@ -66,10 +67,10 @@ func main() {
 	}
 
 	r := handler.NewRouter(handler.Deps{
-		Auth:          authSvc,
-		Events:        eventSvc,
-		S3:            s3Svc,
-		AllowedOrigin: cfg.AllowedOrigin,
+		Auth:           authSvc,
+		Events:         eventSvc,
+		S3:             s3Svc,
+		AllowedOrigins: cfg.AllowedOrigins,
 	})
 
 	srv := &http.Server{
@@ -80,7 +81,7 @@ func main() {
 	}
 
 	go func() {
-		log.Printf("listening on :%s (CORS origin: %s)", cfg.Port, cfg.AllowedOrigin)
+		log.Printf("listening on :%s (CORS origins: %s)", cfg.Port, strings.Join(cfg.AllowedOrigins, ","))
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("listen: %v", err)
 		}

@@ -5,7 +5,9 @@ import (
 	"strings"
 )
 
-func CORS(allowedOrigin string) func(http.Handler) http.Handler {
+// CORS builds a middleware that allows the listed origins. "*" in the
+// list means "any origin" and echoes the requesting origin back.
+func CORS(allowed []string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			origin := r.Header.Get("Origin")
@@ -14,7 +16,7 @@ func CORS(allowedOrigin string) func(http.Handler) http.Handler {
 				// origin is allowed or not, so always signal that to caches.
 				w.Header().Add("Vary", "Origin")
 			}
-			if origin != "" && (allowedOrigin == "*" || strings.EqualFold(origin, allowedOrigin)) {
+			if origin != "" && isAllowed(allowed, origin) {
 				w.Header().Set("Access-Control-Allow-Origin", origin)
 				w.Header().Set("Access-Control-Allow-Credentials", "true")
 				w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
@@ -28,4 +30,16 @@ func CORS(allowedOrigin string) func(http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 		})
 	}
+}
+
+// isAllowed reports whether the request origin matches any entry in the
+// allowed list. Comparison is case-insensitive (origins are scheme+host
+// so case differences only ever come from typos).
+func isAllowed(allowed []string, origin string) bool {
+	for _, a := range allowed {
+		if a == "*" || strings.EqualFold(a, origin) {
+			return true
+		}
+	}
+	return false
 }

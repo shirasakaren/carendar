@@ -11,7 +11,7 @@ import (
 
 type Config struct {
 	Port               string
-	AllowedOrigin      string
+	AllowedOrigins     []string
 	DatabaseURL        string
 	MigrationsPath     string
 	AdminPassword      string
@@ -29,7 +29,7 @@ func Load() (*Config, error) {
 
 	c := &Config{
 		Port:               getEnv("PORT", "8080"),
-		AllowedOrigin:      getEnv("ALLOWED_ORIGIN", "http://localhost:3000"),
+		AllowedOrigins:     parseOrigins(getEnv("ALLOWED_ORIGIN", "http://localhost:3000")),
 		DatabaseURL:        os.Getenv("DATABASE_URL"),
 		MigrationsPath:     getEnv("MIGRATIONS_PATH", "./migrations"),
 		AdminPassword:      os.Getenv("ADMIN_PASSWORD"),
@@ -72,4 +72,17 @@ func getEnv(key, def string) string {
 		return v
 	}
 	return def
+}
+
+// parseOrigins splits a comma-separated ALLOWED_ORIGIN list and drops
+// blank entries. "*" stays a single-element list meaning "any origin".
+func parseOrigins(raw string) []string {
+	parts := strings.Split(raw, ",")
+	out := make([]string, 0, len(parts))
+	for _, p := range parts {
+		if v := strings.TrimSpace(p); v != "" {
+			out = append(out, v)
+		}
+	}
+	return out
 }

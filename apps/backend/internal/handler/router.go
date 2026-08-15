@@ -13,10 +13,10 @@ import (
 )
 
 type Deps struct {
-	Auth          *service.Auth
-	Events        *service.EventService
-	S3            *service.S3
-	AllowedOrigin string
+	Auth           *service.Auth
+	Events         *service.EventService
+	S3             *service.S3
+	AllowedOrigins []string
 }
 
 // Version is stamped into healthz responses so deployments can verify
@@ -41,7 +41,7 @@ func NewRouter(deps Deps) http.Handler {
 	r.Use(chimw.Compress(5))
 	r.Use(middleware.RequestID)
 	r.Use(middleware.SecurityHeaders)
-	r.Use(middleware.CORS(deps.AllowedOrigin))
+	r.Use(middleware.CORS(deps.AllowedOrigins))
 	r.Use(middleware.Logger)
 
 	r.Get("/api/healthz", h.Healthz)
