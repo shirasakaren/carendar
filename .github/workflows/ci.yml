@@ -6,8 +6,18 @@ name: CI
 on:
   pull_request:
     branches: ["*"]
+    paths-ignore:
+      - "*.md"
+      - "LICENSE"
+      - "docs/**"
+      - ".github/ISSUE_TEMPLATE/**"
   push:
     branches: ["*"]
+    paths-ignore:
+      - "*.md"
+      - "LICENSE"
+      - "docs/**"
+      - ".github/ISSUE_TEMPLATE/**"
   workflow_dispatch:
 
 concurrency:
