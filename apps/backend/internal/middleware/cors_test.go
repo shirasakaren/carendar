@@ -7,7 +7,7 @@ import (
 )
 
 func TestCORSAllowsConfiguredOrigin(t *testing.T) {
-	h := CORS("https://kalender.mgm-lab.id")(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	h := CORS([]string{"https://kalender.mgm-lab.id"})(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}))
 
@@ -25,7 +25,7 @@ func TestCORSAllowsConfiguredOrigin(t *testing.T) {
 }
 
 func TestCORSRejectsUnknownOrigin(t *testing.T) {
-	h := CORS("https://kalender.mgm-lab.id")(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	h := CORS([]string{"https://kalender.mgm-lab.id"})(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}))
 
@@ -40,7 +40,7 @@ func TestCORSRejectsUnknownOrigin(t *testing.T) {
 }
 
 func TestCORSVariesOnOrigin(t *testing.T) {
-	h := CORS("https://kalender.mgm-lab.id")(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	h := CORS([]string{"https://kalender.mgm-lab.id"})(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}))
 
@@ -64,8 +64,32 @@ func TestCORSVariesOnOrigin(t *testing.T) {
 	}
 }
 
+func TestCORSAllowsAnyListedOrigin(t *testing.T) {
+	h := CORS([]string{"https://kalender.mgm-lab.id", "http://localhost:3000"})(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	for _, origin := range []string{"https://kalender.mgm-lab.id", "http://localhost:3000"} {
+		req := httptest.NewRequest(http.MethodGet, "/api/events", nil)
+		req.Header.Set("Origin", origin)
+		rec := httptest.NewRecorder()
+		h.ServeHTTP(rec, req)
+		if got := rec.Header().Get("Access-Control-Allow-Origin"); got != origin {
+			t.Errorf("origin %q: allow-origin = %q", origin, got)
+		}
+	}
+
+	req := httptest.NewRequest(http.MethodGet, "/api/events", nil)
+	req.Header.Set("Origin", "https://elsewhere.example")
+	rec := httptest.NewRecorder()
+	h.ServeHTTP(rec, req)
+	if got := rec.Header().Get("Access-Control-Allow-Origin"); got != "" {
+		t.Fatalf("unlisted origin was allowed: %q", got)
+	}
+}
+
 func TestCORSWildcardEchoesOrigin(t *testing.T) {
-	h := CORS("*")(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	h := CORS([]string{"*"})(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}))
 
@@ -81,7 +105,7 @@ func TestCORSWildcardEchoesOrigin(t *testing.T) {
 
 func TestCORSPreflightShortCircuits(t *testing.T) {
 	var called bool
-	h := CORS("https://kalender.mgm-lab.id")(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	h := CORS([]string{"https://kalender.mgm-lab.id"})(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		called = true
 		w.WriteHeader(http.StatusOK)
 	}))
