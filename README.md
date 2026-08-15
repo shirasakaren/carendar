@@ -129,6 +129,28 @@ S3 vars are optional — if unset, `/api/admin/upload` returns
 }
 ```
 
+### Subscription categories
+
+The `?categories=` filter on `/api/calendar.ics` (and the "Salin URL"
+options in the sync modal) accepts a comma-separated list of these
+keys:
+
+| Key | Label | Default color |
+|---|---|---|
+| `internal_events` | Internal Events | `#3a6dc5` |
+| `external_events` | External Events | `#0d9488` |
+| `rnd_website` | R&D Website | `#7c3aed` |
+| `rnd_game` | R&D Game | `#db2777` |
+| `rnd_mobile` | R&D Mobile | `#0891b2` |
+| `rnd_ux` | R&D UX | `#ea580c` |
+| `major_events` | Major Events | `#0e1116` |
+| `workshop` | Workshop | `#f7bf33` |
+| `project_development` | Project Development | `#16a34a` |
+| `academic_events` | Academic Events | `#92400e` |
+| `holiday` | Holiday | `#f94141` |
+
+Example: `/api/calendar.ics?categories=workshop,major_events`.
+
 ### Errors
 
 Every error response is JSON with a single `error` field:
