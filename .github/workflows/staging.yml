@@ -62,7 +62,7 @@ jobs:
 
       - name: Build and push image
         if: steps.creds.outputs.configured == 'true'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: apps/backend/Dockerfile
@@ -124,7 +124,7 @@ jobs:
 
       - name: Build and push image
         if: steps.creds.outputs.configured == 'true'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: apps/frontend/Dockerfile
